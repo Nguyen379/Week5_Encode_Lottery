@@ -2,8 +2,7 @@ import { viem } from "hardhat";
 import { parseEther, formatEther, Address } from "viem";
 import * as readline from "readline";
 
-const MAXUINT256 =
-  115792089237316195423570985008687907853269984665640564039457584007913129639935n;
+const MAXUINT256 = 115792089237316195423570985008687907853269984665640564039457584007913129639935n;
 
 let contractAddress: Address;
 let tokenAddress: Address;
@@ -60,7 +59,7 @@ function menuOptions(rl: readline.Interface) {
           mainMenu(rl);
           break;
         case 2:
-          rl.question("Input duration (in seconds)\n", async (duration) => {
+          rl.question("Input duration (in seconds)\n", async duration => {
             try {
               await openBets(duration);
             } catch (error) {
@@ -71,9 +70,9 @@ function menuOptions(rl: readline.Interface) {
           });
           break;
         case 3:
-          rl.question("What account (index) to use?\n", async (index) => {
+          rl.question("What account (index) to use?\n", async index => {
             await displayBalance(index);
-            rl.question("Buy how many tokens?\n", async (amount) => {
+            rl.question("Buy how many tokens?\n", async amount => {
               try {
                 await buyTokens(index, amount);
                 await displayBalance(index);
@@ -87,9 +86,9 @@ function menuOptions(rl: readline.Interface) {
           });
           break;
         case 4:
-          rl.question("What account (index) to use?\n", async (index) => {
+          rl.question("What account (index) to use?\n", async index => {
             await displayTokenBalance(index);
-            rl.question("Bet how many times?\n", async (amount) => {
+            rl.question("Bet how many times?\n", async amount => {
               try {
                 await bet(index, amount);
                 await displayTokenBalance(index);
@@ -111,23 +110,20 @@ function menuOptions(rl: readline.Interface) {
           mainMenu(rl);
           break;
         case 6:
-          rl.question("What account (index) to use?\n", async (index) => {
+          rl.question("What account (index) to use?\n", async index => {
             const prize = await displayPrize(index);
             if (Number(prize) > 0) {
-              rl.question(
-                "Do you want to claim your prize? [Y/N]\n",
-                async (answer) => {
-                  if (answer.toLowerCase() === "y") {
-                    try {
-                      await claimPrize(index, prize);
-                    } catch (error) {
-                      console.log("error\n");
-                      console.log({ error });
-                    }
+              rl.question("Do you want to claim your prize? [Y/N]\n", async answer => {
+                if (answer.toLowerCase() === "y") {
+                  try {
+                    await claimPrize(index, prize);
+                  } catch (error) {
+                    console.log("error\n");
+                    console.log({ error });
                   }
-                  mainMenu(rl);
                 }
-              );
+                mainMenu(rl);
+              });
             } else {
               mainMenu(rl);
             }
@@ -136,7 +132,7 @@ function menuOptions(rl: readline.Interface) {
         case 7:
           await displayTokenBalance("0");
           await displayOwnerPool();
-          rl.question("Withdraw how many tokens?\n", async (amount) => {
+          rl.question("Withdraw how many tokens?\n", async amount => {
             try {
               await withdrawTokens(amount);
             } catch (error) {
@@ -147,9 +143,9 @@ function menuOptions(rl: readline.Interface) {
           });
           break;
         case 8:
-          rl.question("What account (index) to use?\n", async (index) => {
+          rl.question("What account (index) to use?\n", async index => {
             await displayTokenBalance(index);
-            rl.question("Burn how many tokens?\n", async (amount) => {
+            rl.question("Burn how many tokens?\n", async amount => {
               try {
                 await burnTokens(index, amount);
                 await displayBalance(index);
@@ -165,7 +161,7 @@ function menuOptions(rl: readline.Interface) {
         default:
           throw new Error("Invalid option");
       }
-    }
+    },
   );
 }
 
@@ -181,10 +177,10 @@ async function checkState() {
   const closingTime = await contract.read.betsClosingTime();
   const closingTimeDate = new Date(Number(closingTime) * 1000);
   console.log(
-    `The last block was mined at ${currentBlockDate.toLocaleDateString()} : ${currentBlockDate.toLocaleTimeString()}\n`
+    `The last block was mined at ${currentBlockDate.toLocaleDateString()} : ${currentBlockDate.toLocaleTimeString()}\n`,
   );
   console.log(
-    `lottery should close at ${closingTimeDate.toLocaleDateString()} : ${closingTimeDate.toLocaleTimeString()}\n`
+    `lottery should close at ${closingTimeDate.toLocaleDateString()} : ${closingTimeDate.toLocaleTimeString()}\n`,
   );
 }
 
@@ -205,11 +201,7 @@ async function displayBalance(index: string) {
     address: accounts[Number(index)].account.address,
   });
   const balance = formatEther(balanceBN);
-  console.log(
-    `The account of address ${
-      accounts[Number(index)].account.address
-    } has ${balance} ETH\n`
-  );
+  console.log(`The account of address ${accounts[Number(index)].account.address} has ${balance} ETH\n`);
 }
 
 async function buyTokens(index: string, amount: string) {
@@ -227,15 +219,9 @@ async function buyTokens(index: string, amount: string) {
 async function displayTokenBalance(index: string) {
   const accounts = await getAccounts();
   const token = await viem.getContractAt("LotteryToken", tokenAddress);
-  const balanceBN = await token.read.balanceOf([
-    accounts[Number(index)].account.address,
-  ]);
+  const balanceBN = await token.read.balanceOf([accounts[Number(index)].account.address]);
   const balance = formatEther(balanceBN);
-  console.log(
-    `The account of address ${
-      accounts[Number(index)].account.address
-    } has ${balance} LT0\n`
-  );
+  console.log(`The account of address ${accounts[Number(index)].account.address} has ${balance} LT0\n`);
 }
 
 async function bet(index: string, amount: string) {
@@ -265,14 +251,10 @@ async function closeLottery() {
 async function displayPrize(index: string): Promise<string> {
   const accounts = await getAccounts();
   const contract = await viem.getContractAt("Lottery", contractAddress);
-  const prizeBN = await contract.read.prize([
-    accounts[Number(index)].account.address,
-  ]);
+  const prizeBN = await contract.read.prize([accounts[Number(index)].account.address]);
   const prize = formatEther(prizeBN);
   console.log(
-    `The account of address ${
-      accounts[Number(index)].account.address
-    } has earned a prize of ${prize} Tokens\n`
+    `The account of address ${accounts[Number(index)].account.address} has earned a prize of ${prize} Tokens\n`,
   );
   return prize;
 }
@@ -322,7 +304,7 @@ async function burnTokens(index: string, amount: string) {
   console.log(`Burn confirmed (${receipt?.transactionHash})\n`);
 }
 
-main().catch((error) => {
+main().catch(error => {
   console.error(error);
   process.exitCode = 1;
 });
