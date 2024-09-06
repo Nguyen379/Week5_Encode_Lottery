@@ -5,13 +5,13 @@
   <a href="https://scaffoldeth.io">Website</a>
 </h4>
 
-🧪 
-Buy/Return tokens (Juan)
-View/Place bets ( Kevin)
-Run lottery (Nguyen)
-Check lottery state (Rita)
-View/Claim prizes (Dennis)
-Lottery admin (Santiago)
+## 🧪 Tasks  
++ Buy/Return tokens (Juan)
++ View/Place bets ( Kevin)
++ Run lottery (Nguyen)
++ Check lottery state (Rita)
++ View/Claim prizes (Dennis)
++ Lottery admin (Santiago)
 
 
 
