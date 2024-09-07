@@ -1,12 +1,26 @@
 "use client";
 
 import Link from "next/link";
+import LotteryABI from "../../hardhat/artifacts/contracts/Lottery.sol/Lottery.json";
 import { ContractProvider, useContractContext } from "./ContractContext";
 import DeployContractButton from "./DeployContractButton";
 import type { NextPage } from "next";
-import { useAccount } from "wagmi";
+import { useAccount, useReadContract } from "wagmi";
 import { BugAntIcon, MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { Address } from "~~/components/scaffold-eth";
+
+function PaymentTokenAddress(params: { contractAddress: `0x${string}` }) {
+  const { data, isError, isLoading } = useReadContract({
+    address: params.contractAddress,
+    abi: LotteryABI.abi,
+    functionName: "paymentToken",
+  });
+
+  console.log("PaymentTokenAddress", data);
+  if (isLoading) return <div>Fetching balance…</div>;
+  if (isError) return <div>Error fetching balance</div>;
+  return <div>PaymentTokenAddress: {data as `0x${string}`}</div>;
+}
 
 const Home: NextPage = () => {
   return (
@@ -79,6 +93,7 @@ const HomeContent: NextPage = () => {
           <div className="mt-4 p-4 bg-base-200 rounded-lg">
             <h2 className="text-xl font-bold mb-2">Lottery Contract Address:</h2>
             <p className="font-mono">{contractAddress}</p>
+            <PaymentTokenAddress contractAddress={contractAddress as `0x${string}`} />
           </div>
         )}
       </div>
