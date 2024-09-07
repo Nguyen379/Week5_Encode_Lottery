@@ -5,6 +5,7 @@ import LotteryABI from "../../hardhat/artifacts/contracts/Lottery.sol/Lottery.js
 import BuyTokens from "./BuyTokens";
 import { ContractProvider, useContractContext } from "./ContractContext";
 import DeployContractButton from "./DeployContractButton";
+import GetTokenBalance from "./GetBalance";
 import type { NextPage } from "next";
 import { useAccount, useReadContract } from "wagmi";
 import { BugAntIcon, MagnifyingGlassIcon } from "@heroicons/react/24/outline";
@@ -98,6 +99,15 @@ const HomeContent: NextPage = () => {
             <div className="mt-4">
               <h3 className="text-lg font-bold mb-2">Buy Tokens:</h3>
               <BuyTokens contractAddress={contractAddress as `0x${string}`} />
+            </div>
+            <div className="mt-4">
+              <h3 className="text-lg font-bold mb-2">Your Token Balance:</h3>
+              {connectedAddress && (
+                <GetTokenBalance
+                  lotteryAddress={contractAddress as `0x${string}`}
+                  userAddress={connectedAddress as `0x${string}`}
+                />
+              )}
             </div>
           </div>
         )}
