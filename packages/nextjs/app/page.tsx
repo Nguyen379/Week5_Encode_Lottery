@@ -3,66 +3,10 @@
 import Link from "next/link";
 import { ContractProvider, useContractContext } from "./ContractContext";
 import DeployContractButton from "./DeployContractButton";
-// import LotteryABI from "../../hardhat/artifacts/contracts/Lottery.sol/Lottery.json";
-// import scaffoldConfig from "../scaffold.config";
-// import { deployContract, http, createConfig } from "@wagmi/core";
-// import { hardhat, sepolia } from "@wagmi/core/chains";
-// import { parseEther } from "ethers";
 import type { NextPage } from "next";
 import { useAccount } from "wagmi";
 import { BugAntIcon, MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { Address } from "~~/components/scaffold-eth";
-
-// async function DeployContract() {
-//   const BET_PRICE = "1";
-//   const BET_FEE = "0.2";
-//   const TOKEN_RATIO = 1n;
-
-//   const config = createConfig({
-//     chains: [hardhat, sepolia],
-//     transports: {
-//       [hardhat.id]: http(),
-//       [sepolia.id]: http(),
-//     },
-//   });
-
-//   const result = await deployContract(config, {
-//     abi: LotteryABI.abi,
-//     args: ["LotteryToken", "LT0", TOKEN_RATIO, parseEther(BET_PRICE), parseEther(BET_FEE)],
-//     bytecode: LotteryABI.bytecode as `0x${string}`,
-//   });
-
-//   console.log(result);
-// }
-
-// function DeployLottery() {
-//   const { address, isConnecting, isDisconnected, chain } = useAccount();
-//   if (address)
-//     return (
-//       <div>
-//         <p>Your account address is {address}</p>
-//         <p>Connected to the network {chain?.name}</p>
-//         <DeployContract></DeployContract>
-//       </div>
-//     );
-//   if (isConnecting)
-//     return (
-//       <div>
-//         <p>Loading...</p>
-//       </div>
-//     );
-//   if (isDisconnected)
-//     return (
-//       <div>
-//         <p>Wallet disconnected. Connect wallet to continue</p>
-//       </div>
-//     );
-//   return (
-//     <div>
-//       <p>Connect wallet to continue</p>
-//     </div>
-//   );
-// }
 
 const Home: NextPage = () => {
   return (

@@ -1,5 +1,4 @@
-import React from "react";
-import { useCallback } from "react";
+import React, { useCallback, useState } from "react";
 import LotteryABI from "../../hardhat/artifacts/contracts/Lottery.sol/Lottery.json";
 import { useContractContext } from "./ContractContext";
 import { deployContract, getTransactionReceipt } from "@wagmi/core";
@@ -10,6 +9,7 @@ const DeployContractButton = () => {
   const config = useConfig();
   const { isConnected } = useAccount();
   const { setContractAddress } = useContractContext();
+  const [existingAddress, setExistingAddress] = useState("");
 
   const handleDeploy = useCallback(async () => {
     if (!isConnected) {
@@ -40,10 +40,32 @@ const DeployContractButton = () => {
     }
   }, [config, isConnected, setContractAddress]);
 
+  const handleExistingAddressSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (existingAddress) {
+      setContractAddress(existingAddress);
+      console.log("Using existing contract address:", existingAddress);
+    }
+  };
+
   return (
-    <button onClick={handleDeploy} disabled={!isConnected} className="btn btn-primary">
-      Deploy Lottery Contract
-    </button>
+    <div className="flex flex-col items-center gap-4">
+      <button onClick={handleDeploy} disabled={!isConnected} className="btn btn-primary">
+        Deploy Lottery Contract
+      </button>
+      <form onSubmit={handleExistingAddressSubmit} className="flex items-center gap-2">
+        <input
+          type="text"
+          value={existingAddress}
+          onChange={e => setExistingAddress(e.target.value)}
+          placeholder="Enter existing contract address"
+          className="input input-bordered"
+        />
+        <button type="submit" className="btn btn-secondary">
+          Use Existing Contract
+        </button>
+      </form>
+    </div>
   );
 };
 
