@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import LotteryABI from "../../hardhat/artifacts/contracts/Lottery.sol/Lottery.json";
+import BuyTokens from "./BuyTokens";
 import { ContractProvider, useContractContext } from "./ContractContext";
 import DeployContractButton from "./DeployContractButton";
 import type { NextPage } from "next";
@@ -94,6 +95,10 @@ const HomeContent: NextPage = () => {
             <h2 className="text-xl font-bold mb-2">Lottery Contract Address:</h2>
             <p className="font-mono">{contractAddress}</p>
             <PaymentTokenAddress contractAddress={contractAddress as `0x${string}`} />
+            <div className="mt-4">
+              <h3 className="text-lg font-bold mb-2">Buy Tokens:</h3>
+              <BuyTokens contractAddress={contractAddress as `0x${string}`} />
+            </div>
           </div>
         )}
       </div>
