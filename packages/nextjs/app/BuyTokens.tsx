@@ -7,15 +7,13 @@ function BuyTokens({ contractAddress }: { contractAddress: `0x${string}` }) {
   const [value, setValue] = useState("");
   const { address } = useAccount();
 
-  const { data: hash, isPending, writeContract } = useWriteContract();
+  const { writeContract, data: hash } = useWriteContract();
 
-  const { isLoading: isConfirming, isSuccess: isConfirmed } = useWaitForTransactionReceipt({
+  const { isLoading: isBuying, isSuccess: isBuySuccess } = useWaitForTransactionReceipt({
     hash,
   });
 
-  // https://wagmi.sh/react/guides/write-to-contract#_4-hook-up-the-usewritecontract-hook
-  async function handleBuyTokens(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
+  const handleBuyTokens = () => {
     if (!address) {
       alert("Please connect your wallet first.");
       return;
@@ -28,24 +26,25 @@ function BuyTokens({ contractAddress }: { contractAddress: `0x${string}` }) {
       args: [],
       value: parseEther(value),
     });
-  }
+  };
 
   return (
-    <form onSubmit={handleBuyTokens} className="flex flex-col items-center gap-4">
-      <input
-        type="text"
-        value={value}
-        onChange={e => setValue(e.target.value)}
-        placeholder="Enter ETH amount"
-        className="input input-bordered"
-      />
-      <button disabled={isPending || !value} type="submit" className="btn btn-primary">
-        {isPending ? "Buying..." : "Buy Tokens"}
-      </button>
-      {hash && <div>Transaction Hash: {hash}</div>}
-      {isConfirming && <div>Waiting for confirmation...</div>}
-      {isConfirmed && <div>Transaction confirmed. Tokens purchased!</div>}
-    </form>
+    <div className="my-2">
+      <h3 className="text-lg font-bold mb-2">Buy Tokens:</h3>
+      <div className="flex flex-col">
+        <input
+          type="text"
+          value={value}
+          onChange={e => setValue(e.target.value)}
+          placeholder="Enter ETH amount"
+          className="input input-bordered w-full mb-2"
+        />
+        <button onClick={handleBuyTokens} disabled={isBuying || !value} className="btn btn-primary w-full">
+          {isBuying ? "Buying..." : "Buy Tokens"}
+        </button>
+        {isBuySuccess && <p className="text-green-500 mt-2">Tokens purchased successfully!</p>}
+      </div>
+    </div>
   );
 }
 

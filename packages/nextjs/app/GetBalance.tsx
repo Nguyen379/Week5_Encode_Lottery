@@ -48,25 +48,30 @@ function GetTokenBalance({
 
   if (!showBalance) {
     return (
-      <button onClick={handleFetchBalance} className="btn btn-primary mb-2">
-        Fetch Balance
-      </button>
+      <div className="flex justify-center">
+        <button onClick={handleFetchBalance} className="btn btn-primary">
+          Fetch Balance
+        </button>
+      </div>
     );
   }
 
-  if (isPaymentTokenLoading || isBalanceLoading) return <div>Fetching balance…</div>;
-  if (isPaymentTokenError) return <div>Error fetching payment token address</div>;
-  if (isBalanceError) return <div>Error fetching balance</div>;
+  if (isPaymentTokenLoading || isBalanceLoading) return <div className="text-center">Fetching balance…</div>;
+  if (isPaymentTokenError) return <div className="text-center">Error fetching payment token address</div>;
+  if (isBalanceError) return <div className="text-center">Error fetching balance</div>;
 
   const tokenBalance = typeof balance === "bigint" ? balance : 0n;
 
   return (
-    <div>
-      <div>Payment Token Address: {paymentTokenAddress as `0x${string}`}</div>
-      <div>Balance: {formatEther(tokenBalance)} tokens</div>
-      <button onClick={handleFetchBalance} className="btn btn-primary mt-2">
-        Refresh Balance
-      </button>
+    <div className="flex flex-col items-center">
+      <div className="text-sm text-gray-600 mb-2">Payment Token: {paymentTokenAddress as `0x${string}`}</div>
+      <div className="flex items-center space-x-4">
+        <button onClick={handleFetchBalance} className="btn btn-primary">
+          Refresh Balance
+        </button>
+        <span className="font-semibold">Your Token Balance:</span>
+        <span>{formatEther(tokenBalance)} tokens</span>
+      </div>
     </div>
   );
 }

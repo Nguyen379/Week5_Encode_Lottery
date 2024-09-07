@@ -1,28 +1,15 @@
 "use client";
 
 import Link from "next/link";
-import LotteryABI from "../../hardhat/artifacts/contracts/Lottery.sol/Lottery.json";
+import BurnTokens from "./BurnTokens";
 import BuyTokens from "./BuyTokens";
 import { ContractProvider, useContractContext } from "./ContractContext";
 import DeployContractButton from "./DeployContractButton";
 import GetTokenBalance from "./GetBalance";
 import type { NextPage } from "next";
-import { useAccount, useReadContract } from "wagmi";
+import { useAccount } from "wagmi";
 import { BugAntIcon, MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { Address } from "~~/components/scaffold-eth";
-
-function PaymentTokenAddress(params: { contractAddress: `0x${string}` }) {
-  const { data, isError, isLoading } = useReadContract({
-    address: params.contractAddress,
-    abi: LotteryABI.abi,
-    functionName: "paymentToken",
-  });
-
-  console.log("PaymentTokenAddress", data);
-  if (isLoading) return <div>Fetching balance…</div>;
-  if (isError) return <div>Error fetching balance</div>;
-  return <div>PaymentTokenAddress: {data as `0x${string}`}</div>;
-}
 
 const Home: NextPage = () => {
   return (
@@ -38,33 +25,50 @@ const HomeContent: NextPage = () => {
 
   return (
     <>
-      <div className="flex items-center flex-col flex-grow pt-10">
+      <div className="flex items-center flex-col flex-grow pt-4">
         <div className="px-5">
           <h1 className="text-center">
             <span className="block text-2xl mb-2">Welcome to</span>
-            <span className="block text-4xl font-bold">Scaffold-ETH 2</span>
+            <span className="block text-4xl font-bold">Lottery Game Scaffold-ETH 2</span>
           </h1>
           <div className="flex justify-center items-center space-x-2 flex-col sm:flex-row">
             <p className="my-2 font-medium">Connected Address:</p>
             <Address address={connectedAddress} />
           </div>
-          <p className="text-center text-lg">
-            Get started by editing{" "}
-            <code className="italic bg-base-300 text-base font-bold max-w-full break-words break-all inline-block">
-              packages/nextjs/app/page.tsx
-            </code>
-          </p>
-          <p className="text-center text-lg">
-            Edit your smart contract{" "}
-            <code className="italic bg-base-300 text-base font-bold max-w-full break-words break-all inline-block">
-              YourContract.sol
-            </code>{" "}
-            in{" "}
-            <code className="italic bg-base-300 text-base font-bold max-w-full break-words break-all inline-block">
-              packages/hardhat/contracts
-            </code>
-          </p>
         </div>
+
+        <PageBody />
+        {contractAddress && (
+          <div className="mt-2 py-4 bg-base-200 rounded-lg">
+            <div className="text-center max-w-2xl mx-auto my-4 p-2 bg-base-300 rounded-lg shadow-md">
+              <h2 className="text-2xl font-bold mb-4">Current Lottery Contract</h2>
+              <div className="bg-base-100 rounded-md overflow-hidden">
+                <p className="font-mono text-sm break-all">{contractAddress}</p>
+              </div>
+            </div>
+
+            {connectedAddress && (
+              <div className="mt-4">
+                <GetTokenBalance
+                  lotteryAddress={contractAddress as `0x${string}`}
+                  userAddress={connectedAddress as `0x${string}`}
+                />
+              </div>
+            )}
+
+            <div className="mt-4 flex flex-col md:flex-row gap-4">
+              <div className="flex-1">
+                <BuyTokens contractAddress={contractAddress as `0x${string}`} />
+              </div>
+
+              {connectedAddress && (
+                <div className="flex-1">
+                  <BurnTokens lotteryAddress={contractAddress as `0x${string}`} />
+                </div>
+              )}
+            </div>
+          </div>
+        )}
 
         <div className="flex-grow bg-base-300 w-full mt-16 px-8 py-12">
           <div className="flex justify-center items-center gap-12 flex-col sm:flex-row">
@@ -90,27 +94,6 @@ const HomeContent: NextPage = () => {
             </div>
           </div>
         </div>
-        <PageBody />
-        {contractAddress && (
-          <div className="mt-4 p-4 bg-base-200 rounded-lg">
-            <h2 className="text-xl font-bold mb-2">Lottery Contract Address:</h2>
-            <p className="font-mono">{contractAddress}</p>
-            <PaymentTokenAddress contractAddress={contractAddress as `0x${string}`} />
-            <div className="mt-4">
-              <h3 className="text-lg font-bold mb-2">Buy Tokens:</h3>
-              <BuyTokens contractAddress={contractAddress as `0x${string}`} />
-            </div>
-            <div className="mt-4">
-              <h3 className="text-lg font-bold mb-2">Your Token Balance:</h3>
-              {connectedAddress && (
-                <GetTokenBalance
-                  lotteryAddress={contractAddress as `0x${string}`}
-                  userAddress={connectedAddress as `0x${string}`}
-                />
-              )}
-            </div>
-          </div>
-        )}
       </div>
     </>
   );
