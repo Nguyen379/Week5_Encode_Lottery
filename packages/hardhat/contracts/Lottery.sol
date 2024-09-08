@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: GPL-3.0
 pragma solidity >=0.7.0 <0.9.0;
 
-import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
-import {LotteryToken} from "./LotteryToken.sol";
+import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
+import { LotteryToken } from "./LotteryToken.sol";
 
 /// @title A very simple lottery contract
 /// @author Matheus Pagani
@@ -60,8 +60,8 @@ contract Lottery is Ownable {
 	/// @notice Passes when the lottery is at open state and the current block timestamp is lower than the lottery closing date
 	modifier whenBetsOpen() {
 		require(
-				betsOpen && block.timestamp < betsClosingTime,
-				"Lottery is closed"
+			betsOpen && block.timestamp < betsClosingTime,
+			"Lottery is closed"
 		);
 		_;
 	}
@@ -69,8 +69,8 @@ contract Lottery is Ownable {
 	/// @notice Opens the lottery for receiving bets
 	function openBets(uint256 closingTime) external onlyOwner whenBetsClosed {
 		require(
-				closingTime > block.timestamp,
-				"Closing time must be in the future"
+			closingTime > block.timestamp,
+			"Closing time must be in the future"
 		);
 		betsClosingTime = closingTime;
 		betsOpen = true;
@@ -94,8 +94,8 @@ contract Lottery is Ownable {
 	function betMany(uint256 times) external {
 		require(times > 0);
 		while (times > 0) {
-				bet();
-				times--;
+			bet();
+			times--;
 		}
 	}
 
@@ -105,11 +105,11 @@ contract Lottery is Ownable {
 		require(block.timestamp >= betsClosingTime, "Too soon to close");
 		require(betsOpen, "Already closed");
 		if (_slots.length > 0) {
-				uint256 winnerIndex = getRandomNumber() % _slots.length;
-				address winner = _slots[winnerIndex];
-				prize[winner] += prizePool;
-				prizePool = 0;
-				delete (_slots);
+			uint256 winnerIndex = getRandomNumber() % _slots.length;
+			address winner = _slots[winnerIndex];
+			prize[winner] += prizePool;
+			prizePool = 0;
+			delete (_slots);
 		}
 		betsOpen = false;
 	}

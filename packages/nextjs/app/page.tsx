@@ -6,6 +6,7 @@ import BuyTokens from "./BuyTokens";
 import { ContractProvider, useContractContext } from "./ContractContext";
 import DeployContractButton from "./DeployContractButton";
 import GetTokenBalance from "./GetBalance";
+import PlaceBet from "./PlaceBet";
 import type { NextPage } from "next";
 import { useAccount } from "wagmi";
 import { BugAntIcon, MagnifyingGlassIcon } from "@heroicons/react/24/outline";
@@ -66,6 +67,17 @@ const HomeContent: NextPage = () => {
                   <BurnTokens lotteryAddress={contractAddress as `0x${string}`} />
                 </div>
               )}
+            </div>
+
+            {/* Place Bet UI */}
+            <div className="mt-4 flex flex-col md:flex-row gap-4">
+              <div className="flex-1">
+                {connectedAddress && (
+                  <div className="flex-1">
+                    <PlaceBet contractAddress={contractAddress as `0x${string}`} />
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         )}
