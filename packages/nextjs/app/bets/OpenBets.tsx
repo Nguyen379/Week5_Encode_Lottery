@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import LotteryABI from "../../../hardhat/artifacts/contracts/Lottery.sol/Lottery.json";
-import { useConfig, useReadContract, useWaitForTransactionReceipt, useWriteContract } from "wagmi";
+import DatePicker from "./DatePicker";
+import { useReadContract, useWaitForTransactionReceipt, useWriteContract } from "wagmi";
 
 function OpenBets({ contractAddress, onChange }) {
   // using useReadAddress to fetch data
@@ -19,7 +20,7 @@ function OpenBets({ contractAddress, onChange }) {
     functionName: "betsOpen",
   });
 
-  async function handleOpenBets(): Promise<void> {
+  async function handleOpenBets(betsEndtime): Promise<void> {
     if (!contractAddress) {
       alert("Please deploy a lottery instance first.");
       return;
@@ -27,12 +28,12 @@ function OpenBets({ contractAddress, onChange }) {
 
     if (!betsOpen) {
       // hardcoded value of 5 minutes from now
-      const betsEndtime = BigInt(new Date().valueOf() + 5 * 60 * 1000);
+      // const betsEndtime = BigInt(new Date().valueOf() + 5 * 60 * 1000);
       writeContract({
         address: contractAddress,
         abi: LotteryABI.abi,
         functionName: "openBets",
-        args: [betsEndtime],
+        args: [BigInt(betsEndtime)],
       });
     } else {
       alert("Bets are already open");
@@ -40,6 +41,7 @@ function OpenBets({ contractAddress, onChange }) {
   }
 
   useEffect(() => {
+    // triggering this flag on parent component
     isOpenSuccess ? onChange(true) : onChange(false);
     refetchBetsState();
   }, [isOpenFetched, isOpenSuccess, onChange, refetchBetsState]);
@@ -50,7 +52,8 @@ function OpenBets({ contractAddress, onChange }) {
         <div>
           <h3 className="block text-3xl font-bold">Open & Close Bets</h3>
           <div className="flex flex-col">
-            <OpenCloseButton isOpen={betsOpen} onClick={handleOpenBets} />
+            <DatePicker label="Open Bets" onSubmit={handleOpenBets} />
+            {/* <OpenCloseButton isOpen={betsOpen} onClick={handleOpenBets} /> */}
             {isOpening && <span>Opening bets...</span>}
           </div>
           {isOpenSuccess && (

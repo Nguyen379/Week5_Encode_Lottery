@@ -23,7 +23,6 @@ function CheckBetstimers({ contractAddress }: { contractAddress: `0x${string}` }
     const interval = setInterval(() => {
       setSeconds(Math.floor((time - Date.now()) / 1000));
     }, 1000);
-
     return () => clearInterval(interval);
   }, [time]);
 
@@ -34,6 +33,11 @@ function CheckBetstimers({ contractAddress }: { contractAddress: `0x${string}` }
     // save it to the component state
     setTime(timestamp);
   }, [data]);
+
+  // if time changes, create a <hh:mm:ss> format string to print
+  const hoursForClosing = time && Math.floor((time - Date.now()) / 1000 / 60 / 60);
+  const minutesForClosing = time && Math.floor((time - Date.now()) / 1000 / 60) % 60;
+  const secondsForClosing = time && Math.floor((time - Date.now()) / 1000) % 60;
 
   return (
     <>
@@ -47,7 +51,11 @@ function CheckBetstimers({ contractAddress }: { contractAddress: `0x${string}` }
             <>
               <span>📅{printFormatedTime}</span>
               <br />
-              <span>{seconds} seconds remaining...</span>
+              <span>
+                {seconds >= 1
+                  ? `${hoursForClosing}:${minutesForClosing}:${secondsForClosing} hours remaining...`
+                  : `Bets are closed`}
+              </span>
             </>
           )}
         </div>
