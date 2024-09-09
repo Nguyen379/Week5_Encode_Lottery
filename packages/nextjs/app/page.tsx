@@ -6,9 +6,9 @@ import BuyTokens from "./BuyTokens";
 import { ContractProvider, useContractContext } from "./ContractContext";
 import DeployContractButton from "./DeployContractButton";
 import GetTokenBalance from "./GetBalance";
-import BetsContainer from "./bets/BetsContainer";
 import OpenLottery from "./OpenLottery";
 import PlaceBet from "./PlaceBet";
+// import BetsContainer from "./bets/BetsContainer";
 import type { NextPage } from "next";
 import { useAccount } from "wagmi";
 import { BugAntIcon, MagnifyingGlassIcon } from "@heroicons/react/24/outline";
@@ -73,7 +73,7 @@ const HomeContent: NextPage = () => {
 
             {/* Open Lottery */}
             {connectedAddress && (
-              <div className="flex-1">
+              <div className="justify-center">
                 <OpenLottery contractAddress={contractAddress as `0x${string}`} />
               </div>
             )}
@@ -90,7 +90,7 @@ const HomeContent: NextPage = () => {
             </div>
           </div>
         )}
-        {contractAddress && <BetsContainer contractAddress={contractAddress as `0x${string}`} />}
+        {/* {contractAddress && <BetsContainer contractAddress={contractAddress as `0x${string}`} />} */}
 
         <div className="flex-grow bg-base-300 w-full mt-16 px-8 py-12">
           <div className="flex justify-center items-center gap-12 flex-col sm:flex-row">
@@ -124,7 +124,7 @@ const HomeContent: NextPage = () => {
 function PageBody() {
   return (
     <>
-      <p className="text-center text-lg">Here we are!</p>
+      <p className="text-center text-lg">Start by getting some Sepolia ETH through Faucet!</p>
       <DeployContractButton />
     </>
   );
