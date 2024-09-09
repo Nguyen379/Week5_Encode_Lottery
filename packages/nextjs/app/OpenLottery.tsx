@@ -1,7 +1,10 @@
 import React, { useState } from "react";
 import LotteryABI from "../../hardhat/artifacts/contracts/Lottery.sol/Lottery.json";
 import { CheckLotteryState } from "./CheckLotteryState";
-import { useAccount, useWriteContract } from "wagmi";
+import { Block } from "viem";
+import { useAccount, usePublicClient, useWriteContract } from "wagmi";
+// import { helpers } from "@nomicfoundation/hardhat-network-helpers";
+
 
 function OpenLottery({ contractAddress }: { contractAddress: `0x${string}` }) {
   const { address } = useAccount();
@@ -15,27 +18,36 @@ function OpenLottery({ contractAddress }: { contractAddress: `0x${string}` }) {
     isSuccess: isSuccessClose,
     writeContract: writeContractClose,
   } = useWriteContract();
+  const publicClient = usePublicClient();
 
-  const handleOpenLottery = () => {
+  const handleOpenLottery = async () => {
     if (!address) {
       alert("Please connect your wallet first.");
       return;
     }
-    const closingTime = Math.floor(Date.now() / 1000) + Number(duration);
-    console.log("Closing time REAL: ", new Date(Number(closingTime) * 1000).toLocaleString());
-    console.log("Closing time BLOCK: ", closingTime);
-    writeContract({
-      address: contractAddress,
-      abi: LotteryABI.abi,
-      functionName: "openBets",
-      args: [BigInt(closingTime)],
-    });
+    const block: Block | null = (await publicClient?.getBlock()) ?? null;
+    // const closingTime = Math.floor(Date.now() / 1000) + Number(duration);
+    // console.log("Closing time REAL: ", new Date(Number(closingTime) * 1000).toLocaleString());
+    // console.log("Closing time BLOCK: ", closingTime);
+    if (block != null) {
+      writeContract({
+        address: contractAddress,
+        abi: LotteryABI.abi,
+        functionName: "openBets",
+        args: [BigInt(block.timestamp) + BigInt(duration)],
+      });
+      // await helpers.mine(1000, { interval: 15 });
+    }
   };
 
-  const handleCloseLottery = () => {
+  const handleCloseLottery = async () => {
     if (!address) {
       alert("Please connect your wallet first.");
       return;
+    }
+    const block = (await publicClient?.getBlock()) ?? null;
+    if (block != null) {
+      console.log("Current block: ", block.timestamp);
     }
     writeContractClose({
       address: contractAddress,

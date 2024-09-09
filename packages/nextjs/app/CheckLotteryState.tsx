@@ -1,8 +1,8 @@
 import * as React from "react";
-import { useEffect, useState } from "react";
+// import { useEffect, useState } from "react";
 import { abi } from "../../hardhat/artifacts/contracts/Lottery.sol/Lottery.json";
-import { Block } from "viem";
-import { usePublicClient, useReadContract } from "wagmi";
+// import { Block } from "viem";
+import { useReadContract } from "wagmi";
 
 export const CheckLotteryState = ({ contractAddress }: { contractAddress: `0x${string}` }) => {
   const { data: betsOpen } = useReadContract({
@@ -17,28 +17,28 @@ export const CheckLotteryState = ({ contractAddress }: { contractAddress: `0x${s
     functionName: "betsClosingTime",
   });
 
-  const [block, setBlock] = useState<Block | null>();
-  const publicClient = usePublicClient();
+  // const [block, setBlock] = useState<Block | null>();
+  // const publicClient = usePublicClient();
 
-  // Fetch the latest block
-  useEffect(() => {
-    const fetchBlock = async () => {
-      try {
-        const newBlock = await publicClient?.getBlock();
-        setBlock(newBlock);
-      } catch (error) {
-        console.error("Error fetching block:", error);
-      }
-    };
+  // // Fetch the latest block
+  // useEffect(() => {
+  //   const fetchBlock = async () => {
+  //     try {
+  //       const newBlock = await publicClient?.getBlock();
+  //       setBlock(newBlock);
+  //     } catch (error) {
+  //       console.error("Error fetching block:", error);
+  //     }
+  //   };
 
-    fetchBlock();
-  }, [publicClient]);
+  //   fetchBlock();
+  // }, [publicClient]);
 
-  console.log("Open: ", betsOpen);
-  console.log("Closing time READDATA: ", new Date(Number(betsClosingTime) * 1000).toLocaleString());
-  console.log(betsClosingTime);
-  console.log(block?.timestamp);
-  console.log("Now:", Math.floor(Date.now() / 1000));
+  // console.log("Open: ", betsOpen);
+  // console.log("Closing time READDATA: ", new Date(Number(betsClosingTime) * 1000).toLocaleString());
+  console.log("betsClosingTime: ", betsClosingTime);
+  // console.log(block?.timestamp);
+  // console.log("Now:", Math.floor(Date.now() / 1000));
 
   return (
     <div className="card w-96 bg-primary text-primary-content mt-4">
