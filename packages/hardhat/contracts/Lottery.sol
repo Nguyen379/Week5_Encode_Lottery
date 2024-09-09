@@ -49,6 +49,9 @@ contract Lottery is Ownable {
 		purchaseRatio = _purchaseRatio;
 		betPrice = _betPrice;
 		betFee = _betFee;
+		//TODO: HArdcoding the betting to be open by default, will need to be removed
+		betsOpen = true;
+		betsClosingTime = block.timestamp + 24 hours; // Set initial closing time to 24 hours from deployment
 	}
 
 	/// @notice Passes when the lottery is at closed state
@@ -58,11 +61,15 @@ contract Lottery is Ownable {
 	}
 
 	/// @notice Passes when the lottery is at open state and the current block timestamp is lower than the lottery closing date
+	// modifier whenBetsOpen() {
+	// 	require(
+	// 		betsOpen && block.timestamp < betsClosingTime,
+	// 		"Lottery is closed"
+	// 	);
+	// 	_;
+	// }
 	modifier whenBetsOpen() {
-		require(
-			betsOpen && block.timestamp < betsClosingTime,
-			"Lottery is closed"
-		);
+		require(betsOpen, "Lottery is closed");
 		_;
 	}
 
@@ -83,7 +90,9 @@ contract Lottery is Ownable {
 	}
 
 	/// @notice Charges the bet price and creates a new bet slot with the sender's address
-	function bet() public whenBetsOpen {
+	//TODO: removing whenBetsOpen to hardocde open lotto
+	// function bet() public whenBetsOpen {
+	function bet() public {
 		ownerPool += betFee;
 		prizePool += betPrice;
 		_slots.push(msg.sender);

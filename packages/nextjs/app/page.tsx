@@ -6,6 +6,7 @@ import BuyTokens from "./BuyTokens";
 import { ContractProvider, useContractContext } from "./ContractContext";
 import DeployContractButton from "./DeployContractButton";
 import GetTokenBalance from "./GetBalance";
+import OpenLottery from "./OpenLottery";
 import PlaceBet from "./PlaceBet";
 import type { NextPage } from "next";
 import { useAccount } from "wagmi";
@@ -68,6 +69,13 @@ const HomeContent: NextPage = () => {
                 </div>
               )}
             </div>
+
+            {/* Open Lottery */}
+            {connectedAddress && (
+              <div className="flex-1">
+                <OpenLottery contractAddress={contractAddress as `0x${string}`} />
+              </div>
+            )}
 
             {/* Place Bet UI */}
             <div className="mt-4 flex flex-col md:flex-row gap-4">
