@@ -12,6 +12,7 @@ export default function BetsContainer({ contractAddress }: { contractAddress: st
           <OpenBets
             onChange={(state: boolean) => setBetsOpen(state)}
             contractAddress={contractAddress as `0x${string}`}
+            isBetsOpen={betsOpen}
           />
         </div>
         {betsOpen && <CheckBetstimers contractAddress={contractAddress as `0x${string}`} />}

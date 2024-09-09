@@ -38,6 +38,9 @@ function CheckBetstimers({ contractAddress }: { contractAddress: `0x${string}` }
   const hoursForClosing = time && Math.floor((time - Date.now()) / 1000 / 60 / 60);
   const minutesForClosing = time && Math.floor((time - Date.now()) / 1000 / 60) % 60;
   const secondsForClosing = time && Math.floor((time - Date.now()) / 1000) % 60;
+  const timeLeft = `${hoursForClosing < 9 ? `0${hoursForClosing}` : hoursForClosing}:${
+    minutesForClosing < 9 ? `0${minutesForClosing}` : minutesForClosing
+  }:${secondsForClosing < 9 ? `0${secondsForClosing}` : secondsForClosing}`;
 
   return (
     <>
@@ -51,11 +54,7 @@ function CheckBetstimers({ contractAddress }: { contractAddress: `0x${string}` }
             <>
               <span>📅{printFormatedTime}</span>
               <br />
-              <span>
-                {seconds >= 1
-                  ? `${hoursForClosing}:${minutesForClosing}:${secondsForClosing} hours remaining...`
-                  : `Bets are closed`}
-              </span>
+              <span className="my-2 text-sm">{seconds >= 1 ? `${timeLeft} Hours to close.` : `Bets are closed`}</span>
             </>
           )}
         </div>
