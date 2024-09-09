@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import LotteryABI from "../../hardhat/artifacts/contracts/Lottery.sol/Lottery.json";
 import { useAccount, useReadContract, useWaitForTransactionReceipt, useWriteContract } from "wagmi";
 
@@ -7,23 +7,34 @@ function PlaceBet({ contractAddress }: { contractAddress: `0x${string}` }) {
   const [userBets, setUserBets] = useState<number>(0);
   const { writeContract, data: hash } = useWriteContract();
 
-  const { isLoading: isBetting, isSuccess: isBetSuccess } = useWaitForTransactionReceipt({
+  const {
+    isLoading: isBetting,
+    isSuccess: isBetSuccess,
+    isError: isBetError,
+  } = useWaitForTransactionReceipt({
     hash,
   });
 
   //Get and update Bets Placed
-  const { data: betsPlaced } = useReadContract({
+  const { data: betsPlaced, refetch } = useReadContract({
     address: contractAddress,
     abi: LotteryABI.abi,
     functionName: "_slots",
     args: [address],
   });
 
-  React.useEffect(() => {
+  async function refetchBets() {
+    return await refetch();
+  }
+
+  useEffect(() => {
+    refetchBets();
+    console.log("BETS PLACED", betsPlaced);
     if (betsPlaced && Array.isArray(betsPlaced)) {
+      refetch();
       setUserBets(betsPlaced.length);
     }
-  }, [betsPlaced]);
+  }, [betsPlaced, isBetting, refetch]);
 
   const handlePlaceBet = () => {
     if (!address) {
@@ -46,6 +57,7 @@ function PlaceBet({ contractAddress }: { contractAddress: `0x${string}` }) {
         {isBetting ? "Placing Bet..." : "Place Bet"}
       </button>
       {isBetSuccess && <p className="text-green-500 mt-2">Bet placed successfully!</p>}
+      {isBetError && <p className="text-red-500 mt-2">Error placing bet.</p>}
       <div>
         <p>You have placed {userBets} bets.</p>
       </div>
