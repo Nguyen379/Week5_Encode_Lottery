@@ -44,6 +44,8 @@ yarn install
 cd packages/hardhat
 npm install
 npx hardhat compile
+cd ../nextjs
+npm install ethers
 ```
 
 2. Run a local network in the first terminal:
