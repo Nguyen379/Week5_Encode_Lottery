@@ -38,9 +38,12 @@ To get started with Scaffold-ETH 2, follow the steps below:
 1. Clone this repo & install dependencies
 
 ```
-git clone https://github.com/scaffold-eth/scaffold-eth-2.git
-cd scaffold-eth-2
+git clone https://github.com/Nguyen379/Week5_Encode_Lottery.git
+cd Week5_Encode_Lottery
 yarn install
+cd packages/hardhat
+npm install
+npx hardhat compile
 ```
 
 2. Run a local network in the first terminal:
